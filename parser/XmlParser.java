@@ -71,7 +71,7 @@ public class XmlParser {
         }
         return (XMLElement) xmlElement;
     }
-
+    //Test
     public String xmlToString(XMLElement xmlElement) {
         if (xmlElement != null) {
             String resultString = "";
