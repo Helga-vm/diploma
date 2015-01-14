@@ -1,4 +1,4 @@
-package Analizers;
+package diploma.Analizers;
 
 import net.n3.nanoxml.IXMLElement;
 import net.n3.nanoxml.XMLElement;

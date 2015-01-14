@@ -1,4 +1,4 @@
-package Analizers;
+package diploma.Analizers;
 
 import java.util.Enumeration;
 

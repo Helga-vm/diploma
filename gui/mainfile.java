@@ -1,4 +1,4 @@
-package gui;
+package diploma.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -44,7 +44,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.n3.nanoxml.XMLElement;
-import parser.XmlParser;
+import diploma.parser.XmlParser;
 
 public class mainfile extends JFrame {
 
