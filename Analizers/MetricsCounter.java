@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-package diploma.Analizers;
-=======
+
 package Analizers;
->>>>>>> master
 
 import java.util.Enumeration;
 
@@ -19,11 +16,7 @@ public class MetricsCounter extends AnalizerBase{
 	}
 
 	@Override
-<<<<<<< HEAD
-	protected void Analize() {
-=======
 	public void Analize() {
->>>>>>> master
 		if (xml != null) {
             Enumeration<XMLElement> enumRootChild = xml.enumerateChildren();
             while (enumRootChild.hasMoreElements()) {
@@ -44,13 +37,15 @@ public class MetricsCounter extends AnalizerBase{
                     }
                 }
             }
+            xml.setAttribute("paragraphs_count", new Integer(parCount).toString());
+    		xml.setAttribute("sentences_ount", new Integer(sentCount).toString());
+    		xml.setAttribute("words_count", new Integer(wordCount).toString());  
 		}
+		
 	}
 
 	public XMLElement getResult() {
-		xml.setAttribute("paragraphs_count", new Integer(parCount).toString());
-		xml.setAttribute("sentences_ount", new Integer(sentCount).toString());
-		xml.setAttribute("words_count", new Integer(wordCount).toString());
+		
 		return this.xml;
 	}
 }
