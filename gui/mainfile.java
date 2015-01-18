@@ -36,6 +36,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -46,7 +47,6 @@ import javax.swing.JCheckBox;
 
 import net.n3.nanoxml.XMLElement;
 import parser.XmlParser;
-
 import Analizers.*;
 
 public class mainfile extends JFrame {
@@ -81,7 +81,7 @@ public class mainfile extends JFrame {
 	private void initUI(){
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 378);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -98,37 +98,53 @@ public class mainfile extends JFrame {
 		final JCheckBox chckbxComplexity = new JCheckBox("Complexity");
 		
 		final JCheckBox chckbxMetrics = new JCheckBox("Metrics");
+		
+		final JCheckBox chckbxNumbers = new JCheckBox("Numbers");
+		
+		final JCheckBox chckbxEmotions = new JCheckBox("Emotions");
+		
+		final JCheckBox chckbxSizes = new JCheckBox("Sizes");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnAnalize)
 								.addComponent(chckbxComplexity)
-								.addComponent(chckbxMetrics))
+								.addComponent(chckbxMetrics)
+								.addComponent(chckbxSizes)
+								.addComponent(chckbxNumbers)
+								.addComponent(chckbxEmotions))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE))
+						.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnAnalize))
+					.addContainerGap(14, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+					.addGap(15)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(chckbxComplexity)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(chckbxMetrics)
-							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-							.addComponent(btnAnalize))
-						.addComponent(horizontalBox_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))
-					.addContainerGap())
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(chckbxSizes)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(chckbxNumbers)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(chckbxEmotions))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(horizontalBox_1, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnAnalize))
 		);
 		
 		final JEditorPane editorPane_1 = new JEditorPane();
@@ -142,17 +158,29 @@ public class mainfile extends JFrame {
 		btnAnalize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				AnalizerBase analizer = null;
+				ArrayList<AnalizerBase> analizerList = new ArrayList();
 				prs.setString(editorPane.getText());
 				XMLElement xl = prs.getXmlElement();
 				if (chckbxComplexity.isSelected()){
-					analizer = new ComplexSentenceChecker(xl);
-					
+					analizerList.add(new ComplexSentenceChecker(xl));
 				} 
 				if( chckbxMetrics.isSelected() ) {
-					analizer = new MetricsCounter(xl);
+					analizerList.add(new MetricsCounter(xl));
 				}
-				analizer.Analize();
+				if ( chckbxNumbers.isSelected()){
+					analizerList.add(new NumbersChecker(xl));
+				}
+				if (chckbxEmotions.isSelected()){
+					analizerList.add(new EmotionsChecker(xl));
+				}
+				if (chckbxSizes.isSelected()) {
+					analizerList.add(new SizeChecker(xl));
+				}
+				if (!analizerList.isEmpty()) {
+					for ( int i = 0; i < analizerList.size(); i++ ) {
+						analizerList.get(i).Analize();
+					}
+				}
 				editorPane_1.setText(prs.xmlToString(xl));
 			}
 		});

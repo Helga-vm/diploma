@@ -8,7 +8,7 @@ public class SizeChecker extends AnalizerBase{
 	private int paragraphMaxSize, sentenceMaxSize, sentencesTotalCount, totalLargeSentences;
 	public SizeChecker(XMLElement _xml){
 		super(_xml);
-		paragraphMaxSize = sentencesTotalCount = totalLargeSentences = 0;
+		paragraphMaxSize = 1;
 		sentenceMaxSize = 18;
 	}
 
@@ -17,22 +17,28 @@ public class SizeChecker extends AnalizerBase{
 		// TODO Auto-generated method stub
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
+            int i = 0;
             while (enumerateChildren.hasMoreElements()) {
                 XMLElement paragraph = enumerateChildren.nextElement();
-                checkParagraphSize(paragraph);
+                if (checkParagraphSize(paragraph)) {
+                	xml.getChildAtIndex(i).setAttribute("SentCount", "Critical");
+                }
                 Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+                int j = 0;
                 while (paragraphChildrens.hasMoreElements()) {
                     XMLElement sentence = paragraphChildrens.nextElement();
-                    checkSentenceSize(sentence);
-
+                    if (checkSentenceSize(sentence)) {
+                    	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("Length", "Critical");
+                    }
+                    j++;
                 }
+                i++;
             }
-
-            countSentencesStatistic(xml);
+            //countSentencesStatistic(xml);
 		}
 	}
 	
-	private void countSentencesStatistic(XMLElement xml) {
+	private void countSentencesStatistic(XMLElement xml) {// not important
 		// TODO Auto-generated method stub
 		if (xml != null) {
             int largeSentencesPercent = (int) (((float) totalLargeSentences / (float) sentencesTotalCount) * 100);
@@ -43,10 +49,10 @@ public class SizeChecker extends AnalizerBase{
         }
 	}
 
-	private void checkSentenceSize(XMLElement sentence) {
+	private boolean checkSentenceSize(XMLElement sentence) {
 		// TODO Auto-generated method stub
 		if (sentence != null) {
-            sentencesTotalCount++;
+            //sentencesTotalCount++;
             Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
             int wordsCount = 0;
             while (sentenceChildrens.hasMoreElements()) {
@@ -57,19 +63,23 @@ public class SizeChecker extends AnalizerBase{
                     }
             }
             if (wordsCount > sentenceMaxSize) {
-                totalLargeSentences++;
-                sentence.setAttribute("error-sizeChecker", "Речення занадто велике. Максимальна кількість слів - " + sentenceMaxSize);
+                //totalLargeSentences++;
+            	return true;
+                //sentence.setAttribute("error-sizeChecker", "Речення занадто велике. Максимальна кількість слів - " + sentenceMaxSize);
             }
         }
+		return false;
 	}
 
-	private void checkParagraphSize(XMLElement paragraph) {
+	private boolean checkParagraphSize(XMLElement paragraph) {
 		// TODO Auto-generated method stub
 		if (paragraph != null) {
             if (paragraph.getChildrenCount() > paragraphMaxSize) {
-                paragraph.setAttribute("error-sizeChecker", "В абзаці забагато речень. Максимальная кількість речень - " + paragraphMaxSize);
+                return true;
+            	//paragraph.setAttribute("error-sizeChecker", "В абзаці забагато речень. Максимальная кількість речень - " + paragraphMaxSize);
             }
         }
+		return false;
 	}
 
 	public XMLElement getResult(){
