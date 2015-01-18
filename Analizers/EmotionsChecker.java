@@ -12,12 +12,12 @@ public class EmotionsChecker extends AnalizerBase{
 
 	@Override
 	public void Analize() {
-		
+		int k = 0;
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
             while (enumerateChildren.hasMoreElements()) {
                 XMLElement paragraph = enumerateChildren.nextElement();
-                
+                int j=0;
                 if (paragraph.hasChildren()) {
                     Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
 
@@ -35,16 +35,18 @@ public class EmotionsChecker extends AnalizerBase{
                                         checkEmotionsInPunctuation(words.getChildAtIndex(i).getContent());
                                         //TODO rewrite next
                                         if (emotions != null) {
-                                            words.getChildAtIndex(i).setAttribute("emotions", emotions);
+                                        	xml.getChildAtIndex(k).getChildAtIndex(j).setAttribute("emotions", emotions);//adding attribute to the emotional sentence
+                                            //words.getChildAtIndex(i).setAttribute("emotions", emotions);
                                         }
                                     }
                                 }
                             }
                         }
-                        
+                        emotions = null;
+                        j++;
                     }
                 }
-                
+                k++;
             }
 		}
 	}
