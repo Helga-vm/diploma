@@ -1,3 +1,4 @@
+
 package Analizers;
 
 import java.util.Enumeration;
@@ -36,13 +37,15 @@ public class MetricsCounter extends AnalizerBase{
                     }
                 }
             }
+            xml.setAttribute("paragraphs_count", new Integer(parCount).toString());
+    		xml.setAttribute("sentences_ount", new Integer(sentCount).toString());
+    		xml.setAttribute("words_count", new Integer(wordCount).toString());  
 		}
+		
 	}
 
 	public XMLElement getResult() {
-		xml.setAttribute("paragraphs_count", new Integer(parCount).toString());
-		xml.setAttribute("sentences_ount", new Integer(sentCount).toString());
-		xml.setAttribute("words_count", new Integer(wordCount).toString());
+		
 		return this.xml;
 	}
 }
