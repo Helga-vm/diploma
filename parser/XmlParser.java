@@ -1,4 +1,4 @@
-package diploma.parser;
+package parser;
 
 import net.n3.nanoxml.IXMLElement;
 import net.n3.nanoxml.XMLElement;
@@ -51,11 +51,7 @@ public class XmlParser {
                         ArrayList wordsAndPunctuations = parseWordsAndPunctuations(String.valueOf(sentences.get(j)));
                         if (wordsAndPunctuations != null && wordsAndPunctuations.size() > 0) {
                             for (int k = 0; k < wordsAndPunctuations.size(); k++) {
-<<<<<<< HEAD
-                                if (wordsAndPunctuations.get(k).equals(".") || wordsAndPunctuations.get(k).equals(",") || wordsAndPunctuations.get(k).equals("!") || wordsAndPunctuations.get(k).equals("?") || wordsAndPunctuations.get(k).equals(":") || wordsAndPunctuations.get(k).equals(";") || wordsAndPunctuations.get(k).equals("\"") || wordsAndPunctuations.get(k).equals("'") || wordsAndPunctuations.get(k).equals("%") || wordsAndPunctuations.get(k).equals("Ð²â€žâ€“") || wordsAndPunctuations.get(k).equals("*") || wordsAndPunctuations.get(k).equals(" ") || wordsAndPunctuations.get(k).equals("-")) {
-=======
                                 if (wordsAndPunctuations.get(k).equals(".") || wordsAndPunctuations.get(k).equals(",") || wordsAndPunctuations.get(k).equals("!") || wordsAndPunctuations.get(k).equals("?") || wordsAndPunctuations.get(k).equals(":") || wordsAndPunctuations.get(k).equals(";") || wordsAndPunctuations.get(k).equals("\"") || wordsAndPunctuations.get(k).equals("'") || wordsAndPunctuations.get(k).equals("%") || wordsAndPunctuations.get(k).equals("¹") || wordsAndPunctuations.get(k).equals("*") || wordsAndPunctuations.get(k).equals(" ") || wordsAndPunctuations.get(k).equals("-")) {
->>>>>>> master
                                     IXMLElement punctuation = sentence.createElement("punctuation");
                                     sentence.addChild(punctuation);
                                     punctuation.setContent(String.valueOf(wordsAndPunctuations.get(k)));
@@ -172,7 +168,7 @@ public class XmlParser {
         if (paragraph != null && paragraph.length() > 0) {
             ArrayList sentences = new ArrayList();
             StringBuffer stringBuffer = new StringBuffer(paragraph);
-            String regex = "[.!?]\\s[Ð-Ð¯A-Z|Ð†|Ð„|Ð‡]";
+            String regex = "[.!?]\\s[À-ßA-Z|²|ª|¯]";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(stringBuffer);
 
@@ -196,7 +192,7 @@ public class XmlParser {
         if (sentence != null && sentence.length() > 0) {
             ArrayList wordsAndPunctuations = new ArrayList();
             StringBuffer stringBuffer = new StringBuffer(sentence);
-            String regex = "[,|.|:|;|\"|!|?|*|(|)|â„–|-|+|=|\\s]";
+            String regex = "[,|.|:|;|\"|!|?|*|(|)|¹|-|+|=|\\s]";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(stringBuffer);
 
