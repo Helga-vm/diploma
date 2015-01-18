@@ -42,9 +42,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JCheckBox;
 
 import net.n3.nanoxml.XMLElement;
 import diploma.parser.XmlParser;
+
+import Analizers.*;
 
 public class mainfile extends JFrame {
 
@@ -90,18 +93,20 @@ public class mainfile extends JFrame {
 		
 		Box horizontalBox_1 = Box.createHorizontalBox();
 		horizontalBox_1.setToolTipText("Here are the mistakes");
+		
+		final JCheckBox chckbxComplexity = new JCheckBox("Complexity");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE))
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnAnalize)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnAnalize)
+								.addComponent(chckbxComplexity))
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(18, Short.MAX_VALUE))
 		);
@@ -111,9 +116,12 @@ public class mainfile extends JFrame {
 					.addContainerGap()
 					.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnAnalize)
-						.addComponent(horizontalBox_1, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(chckbxComplexity)
+							.addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+							.addComponent(btnAnalize))
+						.addComponent(horizontalBox_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		
@@ -130,6 +138,10 @@ public class mainfile extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				prs.setString(editorPane.getText());
 				XMLElement xl = prs.getXmlElement();
+				if (chckbxComplexity.isSelected()){
+					ComplexSentenceChecker analizer = new ComplexSentenceChecker(xl);
+					analizer.Analize();
+				}
 				editorPane_1.setText(prs.xmlToString(xl));
 			}
 		});

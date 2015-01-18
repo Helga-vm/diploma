@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 package diploma.Analizers;
+=======
+package Analizers;
+>>>>>>> master
 
 import java.util.Enumeration;
 
@@ -15,7 +19,11 @@ public class MetricsCounter extends AnalizerBase{
 	}
 
 	@Override
+<<<<<<< HEAD
 	protected void Analize() {
+=======
+	public void Analize() {
+>>>>>>> master
 		if (xml != null) {
             Enumeration<XMLElement> enumRootChild = xml.enumerateChildren();
             while (enumRootChild.hasMoreElements()) {
