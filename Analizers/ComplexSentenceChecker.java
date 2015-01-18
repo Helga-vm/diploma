@@ -13,20 +13,29 @@ public class ComplexSentenceChecker extends AnalizerBase {
 	}
 
 	@Override
-	protected void Analize() {
+	public void Analize() {
+		int i = 0;
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
             while (enumerateChildren.hasMoreElements()) {
+            	
                 XMLElement paragraph = enumerateChildren.nextElement();
-
+                int j = 0;
                 if (paragraph.hasChildren()) {
                     Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
 
                     while (paragraphChildrens.hasMoreElements()) {
+                    	
                         XMLElement sentence = paragraphChildrens.nextElement();
                         checkComplexSentence(sentence);
+                        if (complexity>=1){
+                        	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("complexity", new Integer(complexity).toString());
+                        }
+                        j++;
                     }
+                    complexity = 0;
                 }
+                i++;
             }
 		}
 	}
@@ -35,7 +44,7 @@ public class ComplexSentenceChecker extends AnalizerBase {
 		ArrayList<Integer> punctuationIndex = new ArrayList();
         for (int i = 0; i < sentence.getChildrenCount(); i++) {
             XMLElement sentenceElement = (XMLElement) sentence.getChildAtIndex(i);
-            if (sentenceElement.getName().equals("punctuation") && sentenceElement.getContent().equals(",")) {
+            if (sentenceElement.getName().equals("punctuation") && (sentenceElement.getContent().equals(",")||sentenceElement.getContent().equals("."))) {
                 punctuationIndex.add(i);
             }
         }
@@ -47,14 +56,11 @@ public class ComplexSentenceChecker extends AnalizerBase {
                         complexity++;
                  }
             } catch (IndexOutOfBoundsException e) {
-
             }
         }
 	}
 	
 	public XMLElement getResult() {
-		if (complexity>1)
-			xml.setAttribute("complexity", new Integer(complexity).toString());
 // TODO: need to add checking complexity
 // or not needing
 // anyway

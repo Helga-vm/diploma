@@ -51,7 +51,7 @@ public class XmlParser {
                         ArrayList wordsAndPunctuations = parseWordsAndPunctuations(String.valueOf(sentences.get(j)));
                         if (wordsAndPunctuations != null && wordsAndPunctuations.size() > 0) {
                             for (int k = 0; k < wordsAndPunctuations.size(); k++) {
-                                if (wordsAndPunctuations.get(k).equals(".") || wordsAndPunctuations.get(k).equals(",") || wordsAndPunctuations.get(k).equals("!") || wordsAndPunctuations.get(k).equals("?") || wordsAndPunctuations.get(k).equals(":") || wordsAndPunctuations.get(k).equals(";") || wordsAndPunctuations.get(k).equals("\"") || wordsAndPunctuations.get(k).equals("'") || wordsAndPunctuations.get(k).equals("%") || wordsAndPunctuations.get(k).equals("â„–") || wordsAndPunctuations.get(k).equals("*") || wordsAndPunctuations.get(k).equals(" ") || wordsAndPunctuations.get(k).equals("-")) {
+                                if (wordsAndPunctuations.get(k).equals(".") || wordsAndPunctuations.get(k).equals(",") || wordsAndPunctuations.get(k).equals("!") || wordsAndPunctuations.get(k).equals("?") || wordsAndPunctuations.get(k).equals(":") || wordsAndPunctuations.get(k).equals(";") || wordsAndPunctuations.get(k).equals("\"") || wordsAndPunctuations.get(k).equals("'") || wordsAndPunctuations.get(k).equals("%") || wordsAndPunctuations.get(k).equals("¹") || wordsAndPunctuations.get(k).equals("*") || wordsAndPunctuations.get(k).equals(" ") || wordsAndPunctuations.get(k).equals("-")) {
                                     IXMLElement punctuation = sentence.createElement("punctuation");
                                     sentence.addChild(punctuation);
                                     punctuation.setContent(String.valueOf(wordsAndPunctuations.get(k)));
@@ -175,9 +175,9 @@ public class XmlParser {
             int beginIndex = 0;
             int endIndex = 0;
             while (matcher.find()) {
-                endIndex = matcher.start() + 1;
+                endIndex = matcher.start()+1;
                 sentences.add(stringBuffer.substring(beginIndex, endIndex));
-                beginIndex = endIndex + 1;
+                beginIndex = endIndex + 1; //to copy sentence with the previous space remove "+1"
             }
 
             stringBuffer.delete(0, beginIndex);
@@ -206,7 +206,7 @@ public class XmlParser {
                 beginIndex = endIndex + 1;
             }
             if ( endIndex != ( stringBuffer.length() - 1) ) {
-            	wordsAndPunctuations.add(stringBuffer.substring(endIndex + 1, stringBuffer.length()).trim());
+            	wordsAndPunctuations.add(stringBuffer.substring(endIndex, stringBuffer.length()).trim());
             }
             return wordsAndPunctuations;
         }

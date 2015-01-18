@@ -10,7 +10,7 @@ public class NumbersChecker extends AnalizerBase {
 	}
 
 	@Override
-	protected void Analize() {
+	public void Analize() {
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
             while (enumerateChildren.hasMoreElements()) {

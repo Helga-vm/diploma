@@ -15,7 +15,7 @@ public class MetricsCounter extends AnalizerBase{
 	}
 
 	@Override
-	protected void Analize() {
+	public void Analize() {
 		if (xml != null) {
             Enumeration<XMLElement> enumRootChild = xml.enumerateChildren();
             while (enumRootChild.hasMoreElements()) {

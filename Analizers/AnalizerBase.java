@@ -5,7 +5,7 @@ import net.n3.nanoxml.XMLElement;
 
 public abstract class AnalizerBase { // base class for analizators
 	protected XMLElement xml;
-	protected abstract void Analize(); // main analization method
+	public abstract void Analize(); // main analization method
 	public AnalizerBase(XMLElement _xml) {
 		this.xml = _xml;
 	}

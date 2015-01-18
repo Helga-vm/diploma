@@ -13,7 +13,7 @@ public class SizeChecker extends AnalizerBase{
 	}
 
 	@Override
-	protected void Analize() {
+	public void Analize() {
 		// TODO Auto-generated method stub
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
