@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -49,10 +50,16 @@ import net.n3.nanoxml.XMLElement;
 import parser.XmlParser;
 import Analizers.*;
 
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
 public class mainfile extends JFrame {
 
 	private JPanel contentPane;
 	XmlParser prs;
+	private JTable table1;
+	ArrayList<TextError> errList;
 	/**
 	 * Launch the application.
 	 */
@@ -74,6 +81,7 @@ public class mainfile extends JFrame {
 	 */
 	public mainfile() {
 		prs = new XmlParser();
+		errList = new ArrayList<TextError>();
 		initUI();
 		
 	}
@@ -81,7 +89,7 @@ public class mainfile extends JFrame {
 	private void initUI(){
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 378);
+		setBounds(100, 100, 450, 494);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -104,6 +112,8 @@ public class mainfile extends JFrame {
 		final JCheckBox chckbxEmotions = new JCheckBox("Emotions");
 		
 		final JCheckBox chckbxSizes = new JCheckBox("Sizes");
+		
+		Box horizontalBox_2 = Box.createHorizontalBox();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -114,13 +124,18 @@ public class mainfile extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(chckbxComplexity)
 								.addComponent(chckbxMetrics)
-								.addComponent(chckbxSizes)
-								.addComponent(chckbxNumbers)
-								.addComponent(chckbxEmotions))
+								.addComponent(chckbxSizes))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE))
 						.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnAnalize))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(chckbxNumbers)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+									.addComponent(btnAnalize)
+									.addComponent(chckbxEmotions)))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(horizontalBox_2, GroupLayout.PREFERRED_SIZE, 320, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(14, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -130,22 +145,44 @@ public class mainfile extends JFrame {
 					.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
 					.addGap(15)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(chckbxComplexity)
+						.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(chckbxComplexity)
-							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(chckbxMetrics)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(chckbxSizes)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(chckbxNumbers)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(chckbxEmotions))
+							.addComponent(chckbxEmotions)
+							.addPreferredGap(ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+							.addComponent(btnAnalize))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(horizontalBox_1, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnAnalize))
+							.addComponent(horizontalBox_2, GroupLayout.PREFERRED_SIZE, 156, GroupLayout.PREFERRED_SIZE)
+							.addGap(40))))
 		);
+		
+		table1 = new JTable();
+		table1.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Number", "Problem"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				true, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table1.getColumnModel().getColumn(1).setPreferredWidth(367);
+		table1.getColumnModel().getColumn(1).setMinWidth(20);
+		table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		horizontalBox_2.add(table1);
 		
 		final JEditorPane editorPane_1 = new JEditorPane();
 		editorPane_1.setEditable(false);
@@ -181,8 +218,12 @@ public class mainfile extends JFrame {
 						analizerList.get(i).Analize();
 					}
 				}
+				SetErrorList(xl);
+				FillTab();
 				editorPane_1.setText(prs.xmlToString(xl));
 			}
+
+			
 		});
 		JMenuBar menubar = new JMenuBar();
 		
@@ -258,4 +299,60 @@ public class mainfile extends JFrame {
         }
         return fileString;
     }
+	
+	private void SetErrorList(XMLElement xml) {
+		// TODO Auto-generated method stub
+		int k = 0;
+		if (xml != null) {
+            Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
+            while (enumerateChildren.hasMoreElements()) {
+                XMLElement paragraph = enumerateChildren.nextElement();
+                int j=0;
+                if ( paragraph.hasAttribute("SentCount") ){
+                	errList.add(new TextError(paragraph.getAttribute("SentCount"), k, -1, -1));
+                }
+                if (paragraph.hasChildren()) {
+                    Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+
+                    while (paragraphChildrens.hasMoreElements()) {
+                        XMLElement sentence = paragraphChildrens.nextElement();
+                        if ( sentence.hasAttribute("complexity")) {
+                        	errList.add(new TextError(sentence.getAttribute("complexity"), k, j, -1));
+                        }
+                        if (sentence.hasAttribute("emotions")) {
+                        	errList.add(new TextError(sentence.getAttribute("emotions"), k, j, -1));
+                        }
+                        if (sentence.hasAttribute("Length")) {
+                        	errList.add(new TextError(sentence.getAttribute("Length"), k, j, -1));
+                        }
+                        if (sentence.hasChildren()) {
+                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
+
+                            while (sentenceChildrens.hasMoreElements()) {
+                                XMLElement words = sentenceChildrens.nextElement();
+
+                                for (int i = 0; i < words.getChildrenCount(); i++) {
+                                    if (words.hasAttribute("numbers")) {
+                                        errList.add(new TextError(words.getAttribute("numbers"), k, j, i));
+                                    }
+                                    if (words.hasAttribute("slang")) {
+                                    	errList.add(new TextError(words.getAttribute("numbers"), k, j, i));
+                                    }
+                                    //TODO attributes for spellchecker
+                                }
+                            }
+                        }
+                    
+                        j++;
+                    }
+                }
+                k++;
+            }
+		}
+	}
+	private void FillTab() {
+		// TODO Auto-generated method stub
+		
+	}
 }
+

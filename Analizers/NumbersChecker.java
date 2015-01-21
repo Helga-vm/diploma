@@ -25,7 +25,8 @@ public class NumbersChecker extends AnalizerBase {
 
                     while (paragraphChildrens.hasMoreElements()) {
                         XMLElement sentence = paragraphChildrens.nextElement();
-
+                        int k = 0;
+                        
                         if (sentence.hasChildren()){
                         Enumeration<XMLElement> enumeration = sentence.enumerateChildren();
 
@@ -39,13 +40,14 @@ public class NumbersChecker extends AnalizerBase {
                         				int digit = new Integer(word.getContent());
                         				if ( digit < 1000 ){
                         					word.setAttribute("numbers", "Numbers as words");
-                        					xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("numbers", "Numbers as words");
+                        					xml.getChildAtIndex(i).getChildAtIndex(j).getChildAtIndex(k).setAttribute("numbers", "Numbers as words");
                         				//}
                         			}
                         			//}
                         			else{
                         				}
                         		}
+                        		k++;
                         	}
                         }
                         j++;

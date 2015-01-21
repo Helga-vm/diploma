@@ -19,10 +19,12 @@ public class SlangChecker extends AnalizerBase{
 	@Override
 	public void Analize() {
 		// TODO Auto-generated method stub
+		int k = 0;
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
             while (enumerateChildren.hasMoreElements()) {
                 XMLElement paragraph = enumerateChildren.nextElement();
+                int j = 0;
 
                 if (paragraph.hasChildren()) {
                     Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
@@ -40,14 +42,16 @@ public class SlangChecker extends AnalizerBase{
                                     if (words.getChildAtIndex(i).getName().equals("word")) {
                                         String slangError = checkSlang(words.getChildAtIndex(i).getContent());
                                         if (slangError != null) {
-                                            words.getChildAtIndex(i).setAttribute("error-SlangChecker", slangError);
+                                            xml.getChildAtIndex(k).getChildAtIndex(j).getChildAtIndex(i).setAttribute("slang", slangError);
                                         }
                                     }
                                 }
                             }
                         }
+                        j++;
                     }
                 }
+              k++;  
             }
 		}
 	}

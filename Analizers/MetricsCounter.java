@@ -38,7 +38,7 @@ public class MetricsCounter extends AnalizerBase{
                 }
             }
             xml.setAttribute("paragraphs_count", new Integer(parCount).toString());
-    		xml.setAttribute("sentences_ount", new Integer(sentCount).toString());
+    		xml.setAttribute("sentences_count", new Integer(sentCount).toString());
     		xml.setAttribute("words_count", new Integer(wordCount).toString());  
 		}
 		
