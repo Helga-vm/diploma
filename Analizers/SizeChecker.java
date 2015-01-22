@@ -21,14 +21,14 @@ public class SizeChecker extends AnalizerBase{
             while (enumerateChildren.hasMoreElements()) {
                 XMLElement paragraph = enumerateChildren.nextElement();
                 if (checkParagraphSize(paragraph)) {
-                	xml.getChildAtIndex(i).setAttribute("SentCount", "Critical");
+                	xml.getChildAtIndex(i).setAttribute("SentCount", "Too many sentences in the paragraph");
                 }
                 Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
                 int j = 0;
                 while (paragraphChildrens.hasMoreElements()) {
                     XMLElement sentence = paragraphChildrens.nextElement();
                     if (checkSentenceSize(sentence)) {
-                    	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("Length", "Critical");
+                    	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("Length", "Too many words in the sentence");
                     }
                     j++;
                 }

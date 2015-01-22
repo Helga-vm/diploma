@@ -166,19 +166,19 @@ public class mainfile extends JFrame {
 		
 		table1 = new JTable();
 		table1.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Number", "Problem"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				true, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+				new Object[][] {
+				},
+				new String[] {
+					"Number", "Problem"
+				}
+			) {
+				boolean[] columnEditables = new boolean[] {
+					true, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
 		table1.getColumnModel().getColumn(1).setPreferredWidth(367);
 		table1.getColumnModel().getColumn(1).setMinWidth(20);
 		table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -221,6 +221,7 @@ public class mainfile extends JFrame {
 				SetErrorList(xl);
 				FillTab();
 				editorPane_1.setText(prs.xmlToString(xl));
+				errList.clear();
 			}
 
 			
@@ -326,20 +327,22 @@ public class mainfile extends JFrame {
                         	errList.add(new TextError(sentence.getAttribute("Length"), k, j, -1));
                         }
                         if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-
+                            Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                            int i = 0;
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
-
-                                for (int i = 0; i < words.getChildrenCount(); i++) {
+                                
+                               // for (int i = 0; i < words.getChildrenCount(); i++) {
                                     if (words.hasAttribute("numbers")) {
                                         errList.add(new TextError(words.getAttribute("numbers"), k, j, i));
                                     }
                                     if (words.hasAttribute("slang")) {
-                                    	errList.add(new TextError(words.getAttribute("numbers"), k, j, i));
+                                    	errList.add(new TextError(words.getAttribute("slang"), k, j, i));
                                     }
                                     //TODO attributes for spellchecker
-                                }
+                               // }
+                                    i++;
+                                    
                             }
                         }
                     
