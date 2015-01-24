@@ -53,6 +53,9 @@ import Analizers.*;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.LineBorder;
+
+import java.awt.Color;
 
 public class mainfile extends JFrame {
 
@@ -60,6 +63,7 @@ public class mainfile extends JFrame {
 	XmlParser prs;
 	private JTable table1;
 	ArrayList<TextError> errList;
+	XMLElement xl;
 	/**
 	 * Launch the application.
 	 */
@@ -165,24 +169,47 @@ public class mainfile extends JFrame {
 		);
 		
 		table1 = new JTable();
+		table1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int [] markers = new int[2];
+				int row = table1.getSelectedRow();
+				if (row != -1){
+					TextError error1 = errList.get(row);
+					if (error1._word != -1){
+						markers = getWordMarkers(error1);
+					}
+					else if (error1._sentence != -1){
+						markers = getSentanceMarkers(error1);
+					}
+					else {
+						markers = getParagraphMarkers (error1);
+					}
+				}
+			}
+		});
+		table1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		table1.setModel(new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-					"Number", "Problem"
-				}
-			) {
-				boolean[] columnEditables = new boolean[] {
-					true, false
-				};
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
-			});
-		table1.getColumnModel().getColumn(1).setPreferredWidth(367);
-		table1.getColumnModel().getColumn(1).setMinWidth(20);
+			new Object[][] {
+			},
+			new String[] {
+				"Number", "Problem"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table1.getColumnModel().getColumn(0).setPreferredWidth(60);
+		table1.getColumnModel().getColumn(0).setMaxWidth(60);
+		table1.getColumnModel().getColumn(1).setMaxWidth(400);
+		table1.getColumnModel().getColumn(1).setPreferredWidth(250);
 		table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		horizontalBox_2.add(table1);
+		JScrollPane scrollPane_2 = new JScrollPane(table1);
+		horizontalBox_2.add(scrollPane_2);
 		
 		final JEditorPane editorPane_1 = new JEditorPane();
 		editorPane_1.setEditable(false);
@@ -195,9 +222,10 @@ public class mainfile extends JFrame {
 		btnAnalize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				errList.clear();
 				ArrayList<AnalizerBase> analizerList = new ArrayList();
 				prs.setString(editorPane.getText());
-				XMLElement xl = prs.getXmlElement();
+				xl = prs.getXmlElement();
 				if (chckbxComplexity.isSelected()){
 					analizerList.add(new ComplexSentenceChecker(xl));
 				} 
@@ -220,8 +248,9 @@ public class mainfile extends JFrame {
 				}
 				SetErrorList(xl);
 				FillTab();
+				
 				editorPane_1.setText(prs.xmlToString(xl));
-				errList.clear();
+				
 			}
 
 			
@@ -277,6 +306,168 @@ public class mainfile extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 	}
 	
+	protected int[] getParagraphMarkers(TextError error1) {
+		// TODO Auto-generated method stub
+		int [] marker = new int [2];
+		if (xl != null) {
+            String resultString = "";
+            int i = 0;
+            Enumeration<XMLElement> enumerateChildren = xl.enumerateChildren();
+            while (enumerateChildren.hasMoreElements()) {
+                XMLElement paragraph = enumerateChildren.nextElement();
+
+                if (paragraph.hasChildren()) {
+                    Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+
+                    if (paragraphChildrens.hasMoreElements()) {
+                        XMLElement sentence = paragraphChildrens.nextElement();
+                        int j = 0;
+
+                        if (sentence.hasChildren()) {
+                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
+                            if(i == error1._paragraph){
+                            	marker[0] = resultString.length();
+                            	while (sentenceChildrens.hasMoreElements()) {
+                                    XMLElement words = sentenceChildrens.nextElement();
+                                    Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                                    int k = 0;
+                                    
+                                    while(wordsChildrens.hasMoreElements()) {
+                                    	XMLElement word = wordsChildrens.nextElement();
+                                    	resultString += word.getContent();
+                                        k++;
+                                    }
+                                    resultString += " ";
+                                    j++;
+                                }
+                            	marker[1] = resultString.length() - marker[0];
+                            	return marker;
+                            }                           
+                            while (sentenceChildrens.hasMoreElements()) {
+                                XMLElement words = sentenceChildrens.nextElement();
+                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                                int k = 0;
+                                
+                                while(wordsChildrens.hasMoreElements()) {
+                                	XMLElement word = wordsChildrens.nextElement();
+                                	resultString += word.getContent();
+                                    k++;
+                                }
+                                resultString += " ";
+                                j++;
+                            }
+                        }
+                    }
+                }
+                i++;
+            }
+
+        }
+		return null;
+	}
+
+	protected int[] getSentanceMarkers(TextError error1) {
+		// TODO Auto-generated method stub
+		int [] marker = new int [2];
+		if (xl != null) {
+            String resultString = "";
+            int i = 0;
+            Enumeration<XMLElement> enumerateChildren = xl.enumerateChildren();
+            while (enumerateChildren.hasMoreElements()) {
+                XMLElement paragraph = enumerateChildren.nextElement();
+
+                if (paragraph.hasChildren()) {
+                    Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+
+                    if (paragraphChildrens.hasMoreElements()) {
+                        XMLElement sentence = paragraphChildrens.nextElement();
+                        int j = 0;
+
+                        if (sentence.hasChildren()) {
+                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
+
+                            while (sentenceChildrens.hasMoreElements()) {
+                                XMLElement words = sentenceChildrens.nextElement();
+                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                                int k = 0;
+                                if(i == error1._paragraph && j == error1._sentence){
+                                	marker[0] = resultString.length();
+                                	while(wordsChildrens.hasMoreElements()) {
+                                    	XMLElement word = wordsChildrens.nextElement();
+                                    	resultString += word.getContent();
+                                        k++;
+                                    }
+                                	marker[1] = resultString.length() - marker [0];
+                                	return marker;
+                                }
+                                while(wordsChildrens.hasMoreElements()) {
+                                	XMLElement word = wordsChildrens.nextElement();
+                                	resultString += word.getContent();
+                                    k++;
+                                }
+                                resultString += " ";
+                                j++;
+                            }
+                        }
+                    }
+                }
+                i++;
+            }
+
+        }
+		return null;
+	}
+
+	protected int[] getWordMarkers(TextError error1) {
+		// TODO Auto-generated method stub
+		int [] marker = new int [2];
+		if (xl != null) {
+            String resultString = "";
+            int i = 0;
+            Enumeration<XMLElement> enumerateChildren = xl.enumerateChildren();
+            while (enumerateChildren.hasMoreElements()) {
+                XMLElement paragraph = enumerateChildren.nextElement();
+
+                if (paragraph.hasChildren()) {
+                    Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+
+                    if (paragraphChildrens.hasMoreElements()) {
+                        XMLElement sentence = paragraphChildrens.nextElement();
+                        int j = 0;
+
+                        if (sentence.hasChildren()) {
+                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
+
+                            while (sentenceChildrens.hasMoreElements()) {
+                                XMLElement words = sentenceChildrens.nextElement();
+                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                                int k = 0;
+
+                                while(wordsChildrens.hasMoreElements()) {
+                                	XMLElement word = wordsChildrens.nextElement();
+                                	if(i == error1._paragraph && j == error1._sentence && k == error1._word){
+                                		marker[0] = resultString.length();
+                                		marker[1] = word.getContent().length();
+                                		return marker;
+                                	}
+                                	else{
+                                        resultString += word.getContent();
+                                        k++;
+                                    }
+                                }
+                                resultString += " ";
+                                j++;
+                            }
+                        }
+                    }
+                }
+                i++;
+            }
+
+        }
+		return null;
+	}
+
 	public String readFile(File file) {
 
         StringBuffer fileBuffer = null;
@@ -354,8 +545,33 @@ public class mainfile extends JFrame {
 		}
 	}
 	private void FillTab() {
+		Object [][] rowData = new Object[errList.size()][2];
+		for (int i=0; i<errList.size();i++){
+			rowData[i][0]= i+1;
+			rowData[i][1]= errList.get(i)._errmsg;
+		}
+		table1.setModel(new DefaultTableModel(
+				rowData,
+				new String[] {
+					"Number", "Problem"
+				}
+			) {
+				boolean[] columnEditables = new boolean[] {
+					true, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
+		table1.getColumnModel().getColumn(0).setPreferredWidth(60);
+		table1.getColumnModel().getColumn(0).setMaxWidth(60);
+		table1.getColumnModel().getColumn(1).setMaxWidth(400);
+		table1.getColumnModel().getColumn(1).setPreferredWidth(250);
 		// TODO Auto-generated method stub
-		
+		/*for (int i=0; i<errList.size();i++){
+			table1.setValueAt(i+1, i, 0);
+			table1.setValueAt(errList.get(i)._errmsg, i, 1);
+		}*/
 	}
 }
 
