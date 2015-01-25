@@ -185,11 +185,21 @@ public class mainfile extends JFrame {
 							.addGap(40))))
 		);
 		
+		
 		StyleContext sc = new StyleContext();
 	    final DefaultStyledDocument doc = new DefaultStyledDocument(sc);
 	    final Style cwStyle = sc.addStyle("ConstantWidth", null);
 	    //StyleConstants.setFontFamily(cwStyle, "monospaced");
-	    StyleConstants.setForeground(cwStyle, Color.green);
+	    StyleConstants.setForeground(cwStyle, Color.red);
+	    StyleConstants.setBold(cwStyle, true);
+	    
+	    final Style mainStyle = sc.addStyle("MainStyle", null);
+	    StyleConstants.setForeground(mainStyle, Color.black);
+	    StyleConstants.setBold(mainStyle, false);
+	    
+	    final JTextPane textPane = new JTextPane(doc);
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		horizontalBox.add(scrollPane);
 	    
 		table1 = new JTable();
 		table1.addMouseListener(new MouseAdapter() {
@@ -211,8 +221,10 @@ public class mainfile extends JFrame {
 				}
 				try {
 					doc.remove(0, doc.getLength());
-					doc.insertString(0, prs.xmlToString(xl), null);
+					textPane.setText(prs.xmlToString(xl));
+					//doc.insertString(0, prs.xmlToString(xl), null);
 					doc.setCharacterAttributes(markers[0], markers[1], cwStyle, false);
+					textPane.setCaretPosition(markers[0]);
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -247,9 +259,6 @@ public class mainfile extends JFrame {
 		JScrollPane scrollPane_1 = new JScrollPane(textPane_1);
 		horizontalBox_1.add(scrollPane_1);
 		
-		final JTextPane textPane = new JTextPane(doc);
-		JScrollPane scrollPane = new JScrollPane(textPane);
-		horizontalBox.add(scrollPane);
 		btnAnalize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -257,6 +266,7 @@ public class mainfile extends JFrame {
 				ArrayList<AnalizerBase> analizerList = new ArrayList();
 				prs.setString(textPane.getText());
 				xl = prs.getXmlElement();
+				doc.setCharacterAttributes(0, doc.getLength(), mainStyle, false);
 				if (chckbxComplexity.isSelected()){
 					analizerList.add(new ComplexSentenceChecker(xl));
 				} 
