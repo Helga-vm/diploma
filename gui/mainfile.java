@@ -24,6 +24,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 
@@ -53,6 +54,11 @@ import Analizers.*;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.border.LineBorder;
 
 import java.awt.Color;
@@ -118,6 +124,10 @@ public class mainfile extends JFrame {
 		final JCheckBox chckbxSizes = new JCheckBox("Sizes");
 		
 		Box horizontalBox_2 = Box.createHorizontalBox();
+		
+		final JCheckBox chckbxSpell = new JCheckBox("Spell");
+		
+		final JCheckBox chckbxSlang = new JCheckBox("Slang");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -128,7 +138,9 @@ public class mainfile extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(chckbxComplexity)
 								.addComponent(chckbxMetrics)
-								.addComponent(chckbxSizes))
+								.addComponent(chckbxSizes)
+								.addComponent(chckbxSpell)
+								.addComponent(chckbxSlang))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE))
 						.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
@@ -140,7 +152,7 @@ public class mainfile extends JFrame {
 									.addComponent(chckbxEmotions)))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(horizontalBox_2, GroupLayout.PREFERRED_SIZE, 320, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(14, Short.MAX_VALUE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -149,9 +161,14 @@ public class mainfile extends JFrame {
 					.addComponent(horizontalBox, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
 					.addGap(15)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(chckbxComplexity)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(chckbxComplexity)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(chckbxSpell)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(chckbxSlang))
 						.addComponent(horizontalBox_1, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addGap(5)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(chckbxMetrics)
@@ -161,13 +178,19 @@ public class mainfile extends JFrame {
 							.addComponent(chckbxNumbers)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(chckbxEmotions)
-							.addPreferredGap(ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
 							.addComponent(btnAnalize))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(horizontalBox_2, GroupLayout.PREFERRED_SIZE, 156, GroupLayout.PREFERRED_SIZE)
 							.addGap(40))))
 		);
 		
+		StyleContext sc = new StyleContext();
+	    final DefaultStyledDocument doc = new DefaultStyledDocument(sc);
+	    final Style cwStyle = sc.addStyle("ConstantWidth", null);
+	    //StyleConstants.setFontFamily(cwStyle, "monospaced");
+	    StyleConstants.setForeground(cwStyle, Color.green);
+	    
 		table1 = new JTable();
 		table1.addMouseListener(new MouseAdapter() {
 			@Override
@@ -185,6 +208,14 @@ public class mainfile extends JFrame {
 					else {
 						markers = getParagraphMarkers (error1);
 					}
+				}
+				try {
+					doc.remove(0, doc.getLength());
+					doc.insertString(0, prs.xmlToString(xl), null);
+					doc.setCharacterAttributes(markers[0], markers[1], cwStyle, false);
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		});
@@ -211,20 +242,20 @@ public class mainfile extends JFrame {
 		JScrollPane scrollPane_2 = new JScrollPane(table1);
 		horizontalBox_2.add(scrollPane_2);
 		
-		final JEditorPane editorPane_1 = new JEditorPane();
-		editorPane_1.setEditable(false);
-		JScrollPane scrollPane_1 = new JScrollPane(editorPane_1);
+		final JTextPane textPane_1 = new JTextPane();
+		textPane_1.setEditable(false);
+		JScrollPane scrollPane_1 = new JScrollPane(textPane_1);
 		horizontalBox_1.add(scrollPane_1);
 		
-		final JEditorPane editorPane = new JEditorPane();
-		JScrollPane scrollPane = new JScrollPane(editorPane);
+		final JTextPane textPane = new JTextPane(doc);
+		JScrollPane scrollPane = new JScrollPane(textPane);
 		horizontalBox.add(scrollPane);
 		btnAnalize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				errList.clear();
 				ArrayList<AnalizerBase> analizerList = new ArrayList();
-				prs.setString(editorPane.getText());
+				prs.setString(textPane.getText());
 				xl = prs.getXmlElement();
 				if (chckbxComplexity.isSelected()){
 					analizerList.add(new ComplexSentenceChecker(xl));
@@ -241,6 +272,12 @@ public class mainfile extends JFrame {
 				if (chckbxSizes.isSelected()) {
 					analizerList.add(new SizeChecker(xl));
 				}
+				if (chckbxSpell.isSelected()){
+					analizerList.add(new SpellChecker(xl));
+				}
+				if (chckbxSlang.isSelected()){
+					analizerList.add(new SlangChecker(xl));
+				}
 				if (!analizerList.isEmpty()) {
 					for ( int i = 0; i < analizerList.size(); i++ ) {
 						analizerList.get(i).Analize();
@@ -249,7 +286,7 @@ public class mainfile extends JFrame {
 				SetErrorList(xl);
 				FillTab();
 				
-				editorPane_1.setText(prs.xmlToString(xl));
+				textPane_1.setText(prs.xmlToString(xl));
 				
 			}
 
@@ -275,7 +312,7 @@ public class mainfile extends JFrame {
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     File file = filechooser.getSelectedFile();
                     String text = readFile(file);
-                    editorPane.setText(text);
+                    textPane.setText(text);
                 }
 			}
 		});
