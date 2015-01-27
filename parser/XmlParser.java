@@ -8,6 +8,8 @@ import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
 public class XmlParser {
 
     private String source;
@@ -89,6 +91,7 @@ public class XmlParser {
 
                         if (sentence.hasChildren()) {
                             Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
+                            int i = 0;
 
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
@@ -98,7 +101,12 @@ public class XmlParser {
                                     XMLElement word = wordsChildrens.nextElement();
                                     resultString += word.getContent();
                                 }
-                                resultString += " ";
+                                if (resultString.charAt(resultString.length()-1)!='\r'){
+                                	resultString += " ";
+                                }
+                            }
+                            if (enumerateChildren.hasMoreElements()){
+                            	resultString += System.getProperty("line.separator");
                             }
                         }
                     }
@@ -156,7 +164,7 @@ public class XmlParser {
         ArrayList<String> paragraphs = new ArrayList<String>();
 
         if (source != null) {
-            String [] stringArray = source.split("[\n\t]");
+            String [] stringArray = source.split(System.getProperty("line.separator"));/*"[\n\t]( )?"*/
             for (int i = 0; i < stringArray.length; i++) {
                 paragraphs.add(stringArray[i]);
             }
