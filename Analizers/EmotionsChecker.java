@@ -54,7 +54,7 @@ public class EmotionsChecker extends AnalizerBase{
 	private void checkEmotionsInPunctuation(String content) {
 		if (content != null) {
             if (content.matches("[\\!|\\?]")) {
-                emotions = "Emotion colored sentence";
+                emotions = "В технічних текстах не повинно бути емоційно забарвлених реченнях";
             }
         }
 	}

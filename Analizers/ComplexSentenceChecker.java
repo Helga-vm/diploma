@@ -29,7 +29,7 @@ public class ComplexSentenceChecker extends AnalizerBase {
                         XMLElement sentence = paragraphChildrens.nextElement();
                         checkComplexSentence(sentence);
                         if (complexity>1){
-                        	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("complexity", "Too complex sentence");
+                        	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("complexity", "Речення занадто складне, спростіть або розбийте його на кілька простіших речень");
                         }
                         j++;
                     }

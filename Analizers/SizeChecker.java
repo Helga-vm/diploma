@@ -8,7 +8,7 @@ public class SizeChecker extends AnalizerBase{
 	private int paragraphMaxSize, sentenceMaxSize, sentencesTotalCount, totalLargeSentences;
 	public SizeChecker(XMLElement _xml){
 		super(_xml);
-		paragraphMaxSize = 1;
+		paragraphMaxSize = 14;
 		sentenceMaxSize = 18;
 	}
 
@@ -21,14 +21,14 @@ public class SizeChecker extends AnalizerBase{
             while (enumerateChildren.hasMoreElements()) {
                 XMLElement paragraph = enumerateChildren.nextElement();
                 if (checkParagraphSize(paragraph)) {
-                	xml.getChildAtIndex(i).setAttribute("SentCount", "Too many sentences in the paragraph");
+                	xml.getChildAtIndex(i).setAttribute("SentCount", "Забагато речень в одному абзаці, розбийте його на кілька менших");
                 }
                 Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
                 int j = 0;
                 while (paragraphChildrens.hasMoreElements()) {
                     XMLElement sentence = paragraphChildrens.nextElement();
                     if (checkSentenceSize(sentence)) {
-                    	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("Length", "Too many words in the sentence");
+                    	xml.getChildAtIndex(i).getChildAtIndex(j).setAttribute("Length", "Забагато слів в одному реченні, скоротіть його або розбийте на кілька менших");
                     }
                     j++;
                 }

@@ -40,7 +40,7 @@ public class NumbersChecker extends AnalizerBase {
                         				int digit = new Integer(word.getContent());
                         				if ( digit < 1000 ){
                         					word.setAttribute("numbers", "Numbers as words");
-                        					xml.getChildAtIndex(i).getChildAtIndex(j).getChildAtIndex(k).setAttribute("numbers", "Numbers as words");
+                        					xml.getChildAtIndex(i).getChildAtIndex(j).getChildAtIndex(k).setAttribute("numbers", "Числа невеликої величини в технічних текстах слід писати словами");
                         				//}
                         			}
                         			//}

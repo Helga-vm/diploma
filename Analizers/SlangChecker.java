@@ -11,7 +11,7 @@ import net.n3.nanoxml.XMLElement;
 import net.n3.nanoxml.XMLParserFactory;
 
 public class SlangChecker extends AnalizerBase{
-	private final String fileName = System.getProperty("user.dir") + File.separator + "lib" + File.separator + "slang.xml";
+	private final String fileName = "src/slang.xml";
 	public SlangChecker(XMLElement _xml){
 		super(_xml);
 	}
@@ -33,22 +33,23 @@ public class SlangChecker extends AnalizerBase{
                         XMLElement sentence = paragraphChildrens.nextElement();
 
                         if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-
+                            Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                            int i = 0;
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
 
-                                for (int i = 0; i < words.getChildrenCount(); i++) {
-                                    if (words.getChildAtIndex(i).getName().equals("word")) {
-                                        String slangError = checkSlang(words.getChildAtIndex(i).getContent());
+                                //for (int i = 0; i < words.getChildrenCount(); i++) {
+                                    if (words.getName().equals("word")) {
+                                        String slangError = checkSlang(words.getContent());
                                         if (slangError != null) {
                                             xml.getChildAtIndex(k).getChildAtIndex(j).getChildAtIndex(i).setAttribute("slang", slangError);
                                         }
                                     }
-                                }
+                                //}
+                                i++;
                             }
                         }
-                        j++;
+                        j++; 
                     }
                 }
               k++;  
@@ -63,9 +64,9 @@ public class SlangChecker extends AnalizerBase{
                 IXMLParser parser = XMLParserFactory.createDefaultXMLParser();
                 IXMLReader reader = StdXMLReader.fileReader(fileName);
                 parser.setReader(reader);
-                IXMLElement xml = (IXMLElement) parser.parse();
+                IXMLElement xml1 = (IXMLElement) parser.parse();
 
-                Enumeration<XMLElement> elementEnumeration = xml.getChildrenNamed("slang").elements();
+                Enumeration<XMLElement> elementEnumeration = xml1.getChildrenNamed("slang").elements();
                 Enumeration<XMLElement> dictionaryWordsEnum = elementEnumeration.nextElement().enumerateChildren();
 
                 while (dictionaryWordsEnum.hasMoreElements()) {

@@ -24,6 +24,7 @@ public class SpellChecker extends AnalizerBase{
 	@Override
 	public void Analize() {
 		// TODO Auto-generated method stub
+		int k = 0;
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
             while (enumerateChildren.hasMoreElements()) {
@@ -31,29 +32,31 @@ public class SpellChecker extends AnalizerBase{
 
                 if (paragraph.hasChildren()) {
                     Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
-
+                    int j = 0;
                     while (paragraphChildrens.hasMoreElements()) {
                         XMLElement sentence = paragraphChildrens.nextElement();
 
                         if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-
+                            Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                            int i = 0;
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
 
-                                for (int i = 0; i < words.getChildrenCount(); i++) {
-                                    if (words.getChildAtIndex(i).getName().equals("word")) {
-                                        totalWordsCount++;
-                                        String spellError = checkSpell(words.getChildAtIndex(i).getContent());
-                                        if (spellError != null) {
-                                            words.getChildAtIndex(i).setAttribute("error-SpellChecker", spellError);
-                                        }
+                                
+                                if (words.getName().equals("word")) {
+                                    totalWordsCount++;
+                                    String spellError = checkSpell(words.getContent());
+                                    if (spellError != null) {
+                                       words.setAttribute("spell", spellError);
                                     }
                                 }
+                                i++;
                             }
                         }
+                        j++;
                     }
                 }
+                k++;
             }
             countErrorWordsStatistic(xml);
 		}
