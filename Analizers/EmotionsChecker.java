@@ -25,21 +25,21 @@ public class EmotionsChecker extends AnalizerBase{
                         XMLElement sentence = paragraphChildrens.nextElement();
 
                         if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
+                            Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
 
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
 
-                                for (int i = 0; i < words.getChildrenCount(); i++) {
-                                    if (words.getChildAtIndex(i).getName().equals("punctuation")) {
-                                        checkEmotionsInPunctuation(words.getChildAtIndex(i).getContent());
+                                //for (int i = 0; i < words.getChildrenCount(); i++) {
+                                    if (words.getName().equals("punctuation")) {
+                                        checkEmotionsInPunctuation(words.getContent());
                                         //TODO rewrite next
                                         if (emotions != null) {
                                         	xml.getChildAtIndex(k).getChildAtIndex(j).setAttribute("emotions", emotions);//adding attribute to the emotional sentence
                                             //words.getChildAtIndex(i).setAttribute("emotions", emotions);
                                         }
                                     }
-                                }
+                                //}
                             }
                         }
                         emotions = null;
@@ -54,7 +54,7 @@ public class EmotionsChecker extends AnalizerBase{
 	private void checkEmotionsInPunctuation(String content) {
 		if (content != null) {
             if (content.matches("[\\!|\\?]")) {
-                emotions = "В технічних текстах не повинно бути емоційно забарвлених реченнях";
+                emotions = "В технічних текстах не повинно бути емоційно забарвлених реченнь";
             }
         }
 	}

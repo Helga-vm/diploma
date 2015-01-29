@@ -81,9 +81,9 @@ public class SpellChecker extends AnalizerBase{
                 if (xmlFromUrlToString(this.query + word) != null) {
                     IXMLReader reader = StdXMLReader.stringReader(xmlFromUrlToString(word));
                     parser.setReader(reader);
-                    IXMLElement xml = (IXMLElement) parser.parse();
+                    IXMLElement xml1 = (IXMLElement) parser.parse();
 
-                    Enumeration<XMLElement> elementEnumeration = xml.getChildrenNamed("error").elements();
+                    Enumeration<XMLElement> elementEnumeration = xml1.getChildrenNamed("error").elements();
                     ArrayList resultArray = new ArrayList();
 
                     while (elementEnumeration.hasMoreElements()) {

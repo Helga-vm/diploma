@@ -99,7 +99,7 @@ public class mainfile extends JFrame {
 	private void initUI(){
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 494);
+		setBounds(100, 100, 765, 494);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -151,8 +151,8 @@ public class mainfile extends JFrame {
 									.addComponent(btnAnalize)
 									.addComponent(chckbxEmotions)))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(horizontalBox_2, GroupLayout.PREFERRED_SIZE, 320, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(horizontalBox_2, GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)))
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -230,10 +230,7 @@ public class mainfile extends JFrame {
 					textPane.setCaretPosition(markers[0]);
 					String str = textPane.getText();
 
-					int count = 0;
-					for ( int i = 0; i < str.length(); i++) {
-						if (str.charAt(i) == '\n') count++;
-					}
+					
 			}
 		});
 		table1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -253,8 +250,8 @@ public class mainfile extends JFrame {
 		});
 		table1.getColumnModel().getColumn(0).setPreferredWidth(60);
 		table1.getColumnModel().getColumn(0).setMaxWidth(60);
-		table1.getColumnModel().getColumn(1).setMaxWidth(400);
-		table1.getColumnModel().getColumn(1).setPreferredWidth(250);
+		table1.getColumnModel().getColumn(1).setMaxWidth(800);
+		table1.getColumnModel().getColumn(1).setPreferredWidth(400);
 		table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane scrollPane_2 = new JScrollPane(table1);
 		horizontalBox_2.add(scrollPane_2);
@@ -374,70 +371,63 @@ public class mainfile extends JFrame {
                 	XMLElement paragraph = enumerateChildren.nextElement();
 
                     if (paragraph.hasChildren()) {
-                        Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
-
-                        if (paragraphChildrens.hasMoreElements()) {
-                            XMLElement sentence = paragraphChildrens.nextElement();
-                            int j = 0;
-
+                    	Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+                        int j = 0;
+                        while (paragraphChildrens.hasMoreElements()) {
+                            XMLElement sentence = paragraphChildrens.nextElement();                        	
                             if (sentence.hasChildren()) {
-                                Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-                                           
+                                Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                                int k = 0;
                                 while (sentenceChildrens.hasMoreElements()) {
-                                    XMLElement words = sentenceChildrens.nextElement();
-                                    Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
-                                    int k = 0;
-                                    
-                                    while(wordsChildrens.hasMoreElements()) {
-                                    	XMLElement word = wordsChildrens.nextElement();
-                                    	resultString += word.getContent();
-                                        k++;
-                                    }
-                                    if (resultString.charAt(resultString.length()-1)!='\r'){
-                                    	resultString += " ";
-                                    }
-                                    j++;
+                                    XMLElement words = sentenceChildrens.nextElement();                         	
+                                    resultString += words.getContent();
+                                    k++;                         
                                 }
                             }
+                            //TODO rewrite this part
+                            if (paragraphChildrens.hasMoreElements()){
+                            		resultString += " ";
+                            }
+                            j++;
                         }
                     }
-                	marker[1] = resultString.length() - marker[0];
+                    if (enumerateChildren.hasMoreElements()){
+                    	resultString += "\n";
+                    }
+                    marker[1] = resultString.length() - marker[0];
                 	return marker;
                 }                
                 XMLElement paragraph = enumerateChildren.nextElement();
 
                 if (paragraph.hasChildren()) {
-                    Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
-
-                    if (paragraphChildrens.hasMoreElements()) {
-                        XMLElement sentence = paragraphChildrens.nextElement();
+                	Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
                         int j = 0;
-
-                        if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-                                       
-                            while (sentenceChildrens.hasMoreElements()) {
-                                XMLElement words = sentenceChildrens.nextElement();
-                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                        while (paragraphChildrens.hasMoreElements()) {
+                            XMLElement sentence = paragraphChildrens.nextElement();                        	
+                            if (sentence.hasChildren()) {
+                                Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
                                 int k = 0;
-                                
-                                while(wordsChildrens.hasMoreElements()) {
-                                	XMLElement word = wordsChildrens.nextElement();
-                                	resultString += word.getContent();
-                                    k++;
+                                while (sentenceChildrens.hasMoreElements()) {
+                                    XMLElement words = sentenceChildrens.nextElement();                         	
+                                    resultString += words.getContent();
+                                    k++;                         
                                 }
-                                if (resultString.charAt(resultString.length()-1)!='\r'){
-                                	resultString += " ";
-                                }
-                                j++;
                             }
+                            //TODO rewrite this part
+                            if (paragraphChildrens.hasMoreElements()){
+                            		resultString += " ";
+                            }
+                            j++;
                         }
                     }
+                    if (enumerateChildren.hasMoreElements()){
+                    	resultString += "\n";
+                    }
+                    i++;
                 }
-                i++;
             }
 
-        }
+  
 		return null;
 	}
 
@@ -453,44 +443,46 @@ public class mainfile extends JFrame {
 
                 if (paragraph.hasChildren()) {
                     Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
-
-                    if (paragraphChildrens.hasMoreElements()) {
+                    int j = 0;
+                    while (paragraphChildrens.hasMoreElements()) {
                         XMLElement sentence = paragraphChildrens.nextElement();
-                        int j = 0;
-
-                        if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-
-                            while (sentenceChildrens.hasMoreElements()) {
-                                XMLElement words = sentenceChildrens.nextElement();
-                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                        
+                        if(i == error1._paragraph && j == error1._sentence){
+                        	marker[0] = resultString.length();
+                        	if (sentence.hasChildren()) {
+                                Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
                                 int k = 0;
-                                if(i == error1._paragraph && j == error1._sentence){
-                                	marker[0] = resultString.length();
-                                	while(wordsChildrens.hasMoreElements()) {
-                                    	XMLElement word = wordsChildrens.nextElement();
-                                    	resultString += word.getContent();
-                                        k++;
-                                    }
-                                	marker[1] = resultString.length() - marker [0];
-                                	return marker;
+                                while (sentenceChildrens.hasMoreElements()) {
+                                    XMLElement words = sentenceChildrens.nextElement();
+                                    resultString += words.getContent();
+                                    k++;   
                                 }
-                                while(wordsChildrens.hasMoreElements()) {
-                                	XMLElement word = wordsChildrens.nextElement();
-                                	resultString += word.getContent();
-                                    k++;
-                                }
-                                if (resultString.charAt(resultString.length()-1)!='\r'){
-                                resultString += " ";
-                                }
-                                j++;
+                            }
+                        	marker[1] = resultString.length() - marker[0];
+                        	return marker;
+                        }
+                    	
+                        if (sentence.hasChildren()) {
+                            Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                            int k = 0;
+                            while (sentenceChildrens.hasMoreElements()) {
+                                XMLElement words = sentenceChildrens.nextElement();                         	
+                                resultString += words.getContent();
+                                k++;                         
                             }
                         }
+                        //TODO rewrite this part
+                        if (paragraphChildrens.hasMoreElements()){
+                        		resultString += " ";
+                        }
+                        j++;
                     }
+                }
+                if (enumerateChildren.hasMoreElements()){
+                	resultString += "\n";
                 }
                 i++;
             }
-
         }
 		return null;
 	}
@@ -507,38 +499,42 @@ public class mainfile extends JFrame {
 
                 if (paragraph.hasChildren()) {
                     Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
-
-                    if (paragraphChildrens.hasMoreElements()) {
+                    int j = 0;
+                    while (paragraphChildrens.hasMoreElements()) {
                         XMLElement sentence = paragraphChildrens.nextElement();
-                        int j = 0;
-
+                        
                         if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-
+                            Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                            int k = 0;
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
-                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
-                                int k = 0;
-
-                                while(wordsChildrens.hasMoreElements()) {
-                                	XMLElement word = wordsChildrens.nextElement();
+                                //Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
+                                
+                               // while(wordsChildrens.hasMoreElements()) {
+                                	//XMLElement word = wordsChildrens.nextElement();
                                 	if(i == error1._paragraph && j == error1._sentence && k == error1._word){
                                 		marker[0] = resultString.length();
-                                		marker[1] = word.getContent().length();
+                                		marker[1] = words.getContent().length();
                                 		return marker;
                                 	}
                                 	else{
-                                        resultString += word.getContent();
+                                        resultString += words.getContent();
                                         k++;
                                     }
-                                }
-                                if (resultString.charAt(resultString.length()-1)!='\r'){
-                                	resultString += " ";
-                                }
-                                j++;
+                                //}
+                                
+                                
                             }
                         }
+                        //TODO rewrite this part
+                        if (paragraphChildrens.hasMoreElements()){
+                        		resultString += " ";
+                        }
+                        j++;
                     }
+                }
+                if (enumerateChildren.hasMoreElements()){
+                	resultString += "\n";
                 }
                 i++;
             }
@@ -609,7 +605,10 @@ public class mainfile extends JFrame {
                                     if (words.hasAttribute("slang")) {
                                     	errList.add(new TextError(words.getAttribute("slang"), k, j, i));
                                     }
-                                    //TODO attributes for spellchecker
+                                    if (words.hasAttribute("spell")) {
+                                    	errList.add(new TextError(words.getAttribute("spell"), k, j, i));
+                                    }
+                                    
                                // }
                                     i++;
                                     
