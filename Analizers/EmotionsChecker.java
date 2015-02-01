@@ -29,17 +29,13 @@ public class EmotionsChecker extends AnalizerBase{
 
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
-
-                                //for (int i = 0; i < words.getChildrenCount(); i++) {
-                                    if (words.getName().equals("punctuation")) {
-                                        checkEmotionsInPunctuation(words.getContent());
-                                        //TODO rewrite next
-                                        if (emotions != null) {
-                                        	xml.getChildAtIndex(k).getChildAtIndex(j).setAttribute("emotions", emotions);//adding attribute to the emotional sentence
-                                            //words.getChildAtIndex(i).setAttribute("emotions", emotions);
-                                        }
+                                
+                                if (words.getName().equals("punctuation")) {
+                                    checkEmotionsInPunctuation(words.getContent());
+                                    if (emotions != null) {
+                                   	xml.getChildAtIndex(k).getChildAtIndex(j).setAttribute("emotions", emotions);//adding attribute to the emotional sentence
                                     }
-                                //}
+                                }
                             }
                         }
                         emotions = null;
@@ -60,7 +56,6 @@ public class EmotionsChecker extends AnalizerBase{
 	}
 	
 	public XMLElement getResult(){
-		
 		return this.xml;
 	}
 }

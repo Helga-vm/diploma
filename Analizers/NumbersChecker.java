@@ -33,19 +33,13 @@ public class NumbersChecker extends AnalizerBase {
                         	while(enumeration.hasMoreElements()) {
                         		XMLElement word = enumeration.nextElement();
 
-                        		//if (word.getName().equals("word") && word.getContent().matches("[0-9]*,?[0-9]*")) {
                         		if (word.getName().equals("word") && word.getContent().matches("^[0-9]+$")){
-                        		//if  (word.getName().equals("word") && isNumeric(word.getContent()) ) {
-                        			//if (isInteger(word.getContent())) {
                         				int digit = new Integer(word.getContent());
                         				if ( digit < 1000 ){
                         					word.setAttribute("numbers", "Numbers as words");
                         					xml.getChildAtIndex(i).getChildAtIndex(j).getChildAtIndex(k).setAttribute("numbers", "Числа невеликої величини в технічних текстах слід писати словами");
-                        				//}
+                        				
                         			}
-                        			//}
-                        			else{
-                        				}
                         		}
                         		k++;
                         	}

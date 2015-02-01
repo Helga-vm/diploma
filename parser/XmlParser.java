@@ -28,9 +28,6 @@ public class XmlParser {
         return textToXml(this.source);
     }
 
-    /*public String getHtmlElement(XMLElement xmlElement) {
-        //return xmlToHtml(xmlElement);
-    }*/
     public void setString(String str) {
     	this.source = str;
     }
@@ -73,49 +70,37 @@ public class XmlParser {
         }
         return (XMLElement) xmlElement;
     }
-    //Test
+    
+    //TODO retest this one
     public String xmlToString(XMLElement xmlElement) {
         if (xmlElement != null) {
             String resultString = "";
-
-
             Enumeration<XMLElement> enumerateChildren = xmlElement.enumerateChildren();
             while (enumerateChildren.hasMoreElements()) {
                 XMLElement paragraph = enumerateChildren.nextElement();
 
                 if (paragraph.hasChildren()) {
-                    Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
-
-                    if (paragraphChildrens.hasMoreElements()) {
-                        XMLElement sentence = paragraphChildrens.nextElement();
-
-                        if (sentence.hasChildren()) {
-                            Enumeration<XMLElement> sentenceChildrens = paragraph.enumerateChildren();
-                            int i = 0;
-
-                            while (sentenceChildrens.hasMoreElements()) {
-                                XMLElement words = sentenceChildrens.nextElement();
-                                Enumeration<XMLElement> wordsChildrens = words.enumerateChildren();
-
-                                while(wordsChildrens.hasMoreElements()) {
-                                    XMLElement word = wordsChildrens.nextElement();
-                                    resultString += word.getContent();
-                                }
-                                if (resultString.charAt(resultString.length()-1)!='\r'){
-                                	resultString += " ";
-                                }
-                            }
-                            if (enumerateChildren.hasMoreElements()){
-                            	resultString += System.getProperty("line.separator");
-                            }
-                        }
+                	Enumeration<XMLElement> paragraphChildrens = paragraph.enumerateChildren();
+                    while (paragraphChildrens.hasMoreElements()) {
+                    	XMLElement sentence = paragraphChildrens.nextElement();                        	
+                    	if (sentence.hasChildren()) {
+                    		Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
+                    		while (sentenceChildrens.hasMoreElements()) {
+                    			XMLElement words = sentenceChildrens.nextElement();                         	
+                    			resultString += words.getContent();                         
+                    		}
+                    	}
+                    	if (paragraphChildrens.hasMoreElements()){
+                    		resultString += " ";
+                    	}
                     }
                 }
+                if (enumerateChildren.hasMoreElements()){
+                  	resultString += "\n";
+                }
             }
-
             return resultString;
         }
-
         return null;
     }
 
@@ -164,7 +149,7 @@ public class XmlParser {
         ArrayList<String> paragraphs = new ArrayList<String>();
 
         if (source != null) {
-            String [] stringArray = source.split(System.getProperty("line.separator"));/*"[\n\t]( )?"*/
+            String [] stringArray = source.split(System.getProperty("line.separator"));
             for (int i = 0; i < stringArray.length; i++) {
                 paragraphs.add(stringArray[i]);
             }
@@ -186,7 +171,7 @@ public class XmlParser {
             while (matcher.find()) {
                 endIndex = matcher.start()+1;
                 sentences.add(stringBuffer.substring(beginIndex, endIndex));
-                beginIndex = endIndex + 1; //to copy sentence with the previous space remove "+1"
+                beginIndex = endIndex + 1;
             }
 
             stringBuffer.delete(0, beginIndex);

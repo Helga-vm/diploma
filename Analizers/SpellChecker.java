@@ -15,15 +15,12 @@ import net.n3.nanoxml.XMLParserFactory;
 
 public class SpellChecker extends AnalizerBase{
 	private final String query = "http://speller.yandex.net/services/spellservice/checkText?lang=uk&text=";
-    int errorWordsCount, totalWordsCount;
 	public SpellChecker(XMLElement _xml){
 		super(_xml);
-		errorWordsCount = totalWordsCount = 0;
 	}
 
 	@Override
 	public void Analize() {
-		// TODO Auto-generated method stub
 		int k = 0;
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
@@ -42,11 +39,10 @@ public class SpellChecker extends AnalizerBase{
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
 
-                                
                                 if (words.getName().equals("word")) {
-                                    totalWordsCount++;
                                     String spellError = checkSpell(words.getContent());
                                     if (spellError != null) {
+                                    	 //TODO 
                                        words.setAttribute("spell", spellError);
                                     }
                                 }
@@ -58,23 +54,10 @@ public class SpellChecker extends AnalizerBase{
                 }
                 k++;
             }
-            countErrorWordsStatistic(xml);
 		}
 	}
 
-	private void countErrorWordsStatistic(XMLElement xml) {
-		// TODO Auto-generated method stub
-		if (xml != null) {
-            int errorWordsPercent = (int) (((float) errorWordsCount / (float) totalWordsCount) * 100);
-            if (errorWordsPercent > 0) {
-                String statisticsResult = "В тексті " + errorWordsPercent + "% слів з синтаксичними помилками.";
-                xml.setAttribute("metrics-wordsWithErrors", statisticsResult);
-            }
-        }
-	}
-
 	private String checkSpell(String word) {
-		// TODO Auto-generated method stub
 		if (word != null) {
             try {
                 IXMLParser parser = XMLParserFactory.createDefaultXMLParser();
@@ -97,7 +80,6 @@ public class SpellChecker extends AnalizerBase{
                     }
 
                     if (resultArray.size() > 0) {
-                        errorWordsCount++;
                         String errorMessage = "Варiанти написання слова: ";
                         for  (int i = 0; i < resultArray.size(); i++) {
                             errorMessage += resultArray.get(i) + ", ";
@@ -110,15 +92,13 @@ public class SpellChecker extends AnalizerBase{
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                
             }
         }
-
         return null;
 	}
 
 	private String xmlFromUrlToString(String word) {
-		// TODO Auto-generated method stub
 		try {
             URL sourceUrl = new URL(this.query + URLEncoder.encode(word, "UTF-8"));
             InputStream inputStream = sourceUrl.openStream();
@@ -131,7 +111,7 @@ public class SpellChecker extends AnalizerBase{
             String resultString = stringBuilder.toString();
             return resultString;
         } catch (Exception e) {
-            e.printStackTrace();
+            
         }
 
 		return null;

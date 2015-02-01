@@ -38,14 +38,12 @@ public class SlangChecker extends AnalizerBase{
                             while (sentenceChildrens.hasMoreElements()) {
                                 XMLElement words = sentenceChildrens.nextElement();
 
-                                //for (int i = 0; i < words.getChildrenCount(); i++) {
                                     if (words.getName().equals("word")) {
                                         String slangError = checkSlang(words.getContent());
                                         if (slangError != null) {
                                             xml.getChildAtIndex(k).getChildAtIndex(j).getChildAtIndex(i).setAttribute("slang", slangError);
                                         }
                                     }
-                                //}
                                 i++;
                             }
                         }
@@ -58,7 +56,6 @@ public class SlangChecker extends AnalizerBase{
 	}
 
 	private String checkSlang(String word) {
-		// TODO Auto-generated method stub
 		if (word != null) {
             try {
                 IXMLParser parser = XMLParserFactory.createDefaultXMLParser();

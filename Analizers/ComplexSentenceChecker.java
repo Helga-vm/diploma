@@ -61,9 +61,6 @@ public class ComplexSentenceChecker extends AnalizerBase {
 	}
 	
 	public XMLElement getResult() {
-// TODO: need to add checking complexity
-// or not needing
-// anyway
 		return this.xml;
 	}
 	

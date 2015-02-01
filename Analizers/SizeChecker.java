@@ -14,7 +14,6 @@ public class SizeChecker extends AnalizerBase{
 
 	@Override
 	public void Analize() {
-		// TODO Auto-generated method stub
 		if (xml != null) {
             Enumeration<XMLElement> enumerateChildren = xml.enumerateChildren();
             int i = 0;
@@ -34,25 +33,11 @@ public class SizeChecker extends AnalizerBase{
                 }
                 i++;
             }
-            //countSentencesStatistic(xml);
 		}
-	}
-	
-	private void countSentencesStatistic(XMLElement xml) {// not important
-		// TODO Auto-generated method stub
-		if (xml != null) {
-            int largeSentencesPercent = (int) (((float) totalLargeSentences / (float) sentencesTotalCount) * 100);
-            if (largeSentencesPercent > 0) {
-                String statisticsResult = "В тексті " + largeSentencesPercent + "% занадто великих речень.";
-                xml.setAttribute("metrics-sizeChecker", statisticsResult);
-            }
-        }
 	}
 
 	private boolean checkSentenceSize(XMLElement sentence) {
-		// TODO Auto-generated method stub
 		if (sentence != null) {
-            //sentencesTotalCount++;
             Enumeration<XMLElement> sentenceChildrens = sentence.enumerateChildren();
             int wordsCount = 0;
             while (sentenceChildrens.hasMoreElements()) {
@@ -63,20 +48,16 @@ public class SizeChecker extends AnalizerBase{
                     }
             }
             if (wordsCount > sentenceMaxSize) {
-                //totalLargeSentences++;
             	return true;
-                //sentence.setAttribute("error-sizeChecker", "Речення занадто велике. Максимальна кількість слів - " + sentenceMaxSize);
             }
         }
 		return false;
 	}
 
 	private boolean checkParagraphSize(XMLElement paragraph) {
-		// TODO Auto-generated method stub
 		if (paragraph != null) {
             if (paragraph.getChildrenCount() > paragraphMaxSize) {
                 return true;
-            	//paragraph.setAttribute("error-sizeChecker", "В абзаці забагато речень. Максимальная кількість речень - " + paragraphMaxSize);
             }
         }
 		return false;
